@@ -1,0 +1,12 @@
+#For json transfer
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods: "GET,POST,OPTIONS,DELETE,PUT"
+Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type"
+
+##For processing php in js files
+#AddType application/x-httpd-php .js
+#AddHandler x-httpd-php5 .js
+#
+#<FilesMatch "\.(js|php)$">
+#SetHandler application/x-httpd-php
+#</FilesMatch>
