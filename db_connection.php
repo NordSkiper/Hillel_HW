@@ -14,7 +14,7 @@ try{
 
     $dbh = new UserDB ($dsn, $user, $pass, $opt);
 
-//    $query = $dbh->prepare('SELECT * FROM test');
+//    $query = $dbh->prepare('SHOW TABLES like `test`');
 //    $query->execute();
 //
 //    $users = $query->fetchAll();

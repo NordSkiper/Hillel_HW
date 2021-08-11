@@ -1,44 +1,56 @@
-
-var tableCreationButton = document.querySelector('.create-table');
+var tableCreationButton = document.getElementsByClassName('create-table')[0];
 var tableVerificationButton = document.querySelector('.table-verification-button');
 var tableAddInformation = document.querySelector('.table-add-information');
-var buttonForInputData = document.querySelector(".show-form-insert")
+var InputDataButton = document.querySelector(".show-form-insert")
+var phoneCheckBox = document.querySelector('.phone-checkbox');
+var inputId = document.querySelector('.id');
 
-console.log(tableCreationButton);
+phoneCheckBox.addEventListener('change', function () {
+    showForm('.phone');
+});
 
-buttonForInputData.addEventListener('click', function (){
+InputDataButton.addEventListener('click', function () {
     showForm('.form-insert');
     showForm('.table-add-information');
 });
 
-function showForm(e){
+function showForm(e) {
     var element = document.querySelector(e);
-    if(element.classList.contains('hidden')){
+    if (element.classList.contains('hidden')) {
         element.classList.remove('hidden');
-    }else{
+    } else {
         element.classList.add('hidden');
     }
 }
 
-tableCreationButton.classList.remove('hidden');
+inputId.addEventListener('click', function(){
 
-tableVerificationButton.addEventListener('click', function (){
+    var data = JSON.stringify({
+        "id": 1,
+    });
+    sendJSON(data);
+
+})
+
+tableVerificationButton.addEventListener('click', function () {
     var message = document.querySelector('.tableMessage');
-    // if(false){
-    //     tableCreationButton.classList.add('hidden');
-    //     message.classList.remove('hidden');
-    // }else{
-        tableCreationButton.classList.remove('hidden');
-    // }
+
+    var data = JSON.stringify({
+        "table": 1,
+    });
+    sendJSON(data);
 });
 
-tableCreationButton.addEventListener("click", function (){
-    document.querySelector('.tableMessage').classList.remove('hidden');
+tableCreationButton.addEventListener("click", function () {
+    var data = JSON.stringify({
+        "tableCreation": 1,
+    });
+    sendJSON(data);
 });
 
-tableAddInformation.addEventListener('click', function (){sendJSON()});
 
-function sendJSON(){
+
+tableAddInformation.addEventListener('click', function () {
 
     var form = document.querySelector('.form-insert');
     var name = form.querySelector('.name');
@@ -46,12 +58,6 @@ function sendJSON(){
     var age = form.querySelector('.age');
     var email = form.querySelector('.email');
     var phone = form.querySelector('.phone');
-    var result = document.querySelector(".result")
-
-    var xhr = new XMLHttpRequest();
-    var url = "json.php";
-    xhr.open("POST", url, true);
-    // xhr.setRequestHeader("Content-Type", "application/json");
 
     var data = JSON.stringify({
         "name": name.value,
@@ -61,14 +67,50 @@ function sendJSON(){
         "phone": phone.value
     });
 
+    sendJSON(data);
+
+});
+
+function sendJSON(data) {
+
+    var xhr = new XMLHttpRequest();
+    var url = "json.php";
+    xhr.open("POST", url, true);
+    // xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(data);
 
     xhr.onreadystatechange = function () {
-        // если запрос принят и сервер ответил, что всё в порядке
+
         if (xhr.readyState === 4 && xhr.status === 200) {
-            // выводим то, что ответил нам сервер — так мы убедимся, что данные он получил правильно
-            result.innerHTML = this.responseText;
+
+            switch (this.responseText) {
+                case 'Table exist':
+                    document.querySelector('.tableMessage').classList.remove('hidden');
+                    break
+                case 'Table not exist':
+                    tableCreationButton.classList.remove('hidden');
+                    break
+                case 'Data has been insert':
+                    var result = document.querySelector(".result")
+                    var message = 'Данные внесены в таблицу'
+                    result.innerHTML = message;
+                    break
+                case 'Table created':
+                    document.querySelector('.tableMessage').classList.remove('hidden');
+                    break
+                default:
+                    // this.responseType = 'json'
+                    // console.log(xhr.responseText);
+                    // var userInformation = JSON.parse(xhr.responseText);
+                    //
+                    var result1 = document.querySelector(".result1")
+                    result1.innerHTML = this.responseText;
+                    console.log(this.responseText);
+
+
+                    break
+            }
+
         }
     };
-
 }

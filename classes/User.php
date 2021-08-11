@@ -19,23 +19,15 @@ class User
                 $this->surname = $json_request["surname"];
                 $this->age = $json_request["age"];
                 $this->email = $json_request["email"];
-                if($json_request["phone"]){
-                    $this->phone = $json_request["phone"];
-                }else{
-                    $this->phone = '';
-                }
+                $this->phone = $json_request["phone"];
                 break;
             default:
                 $this->id = $json_request['id'];
                 break;
         }
     }
-//    public function create()
-//    {
-//        $query = "INSERT INTO user (name, surname, age, email, phone) VALUES ({$this->name}, {$this->surname}, {$this->age}, {$this->email}, {$this->phone})";
-//        $query_insert = $this->dbh->prepare($query);
-//        $query_insert->execute();
-//    }
+
+
 
     public function getData()
     {

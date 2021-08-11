@@ -7,46 +7,68 @@ use PDO;
 
 class UserDB extends PDO
 {
-//    static private $instance;
-//
-//    static public function getInstance($dsn, $user, $pass, $opt)
-//    {
-//        if(static::$instance == null){
-//            static::$instance = new self($dsn, $user, $pass, $opt);
-//        }else{
-//            return static::$instance;
-//        }
-//    }
 
     public function __construct($dsn, $username = null, $password = null, $options = null)
     {
         parent::__construct($dsn, $username, $password, $options);
     }
 
-    public function create(User $user )
+    public function create(User $user)
     {
-        $query = "INSERT INTO `test` (`name`, `surname`, `age`, `email`, `phone`) VALUES ('{$user->getName()}', '{$user->getSurname()}', '{$user->getAge()}', '{$user->getEmail()}', '{$user->getPhone()}')";
+        $query = <<<HEREDOC
+INSERT INTO `test` 
+    (`name`, `surname`, `age`, `email`, `phone`) 
+    VALUES 
+    ('{$user->getName()}', '{$user->getSurname()}', '{$user->getAge()}', '{$user->getEmail()}', '{$user->getPhone()}')
+HEREDOC;
+
         $query_insert = $this->prepare($query);
         $query_insert->execute();
     }
 
-    public function createTable()
+    public function tableVerification()
     {
+        $query = "SELECT 1 FROM `test` LIMIT 1";
+        $query_check = $this->prepare($query);
+        $query_check->execute();
 
-        echo '111111111111111111111111111111111111';
-
+        //if table doesn't exist $query_check->execute() returns null
+        $table_exist = $query_check->fetchAll();
+        if ($table_exist == null) {
+            return false;
+        } else {
+            return true;
+        }
 
     }
 
-    public function select()
+    public function createTable()
     {
-        $query = $this->prepare('SELECT * FROM test');
-        $query->execute();
+        $query = <<<HEREDOC
+CREATE TABLE IF NOT EXISTS `test` ( 
+    `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , 
+    `name` VARCHAR(15) NOT NULL , 
+    `surname` VARCHAR(15) NOT NULL , 
+    `age` INT(4) NOT NULL , 
+    `email` VARCHAR(40) NOT NULL , 
+    `phone` INT(15) NULL , 
+    PRIMARY KEY (`id`));
+HEREDOC;
+        $query_create = $this->prepare($query);
+        $query_create->execute();
+    }
 
+    public function select(User $user): array
+    {
+
+        $query = $this->prepare('SELECT * FROM test WHERE `id` = ' . $user->getId());
+        $query->execute();
         $users = $query->fetchAll();
 
-        echo "<pre>" . var_dump($users) . "</pre>";
-        //die('End');
+        return $users;
+
+//        echo "<pre>" . var_dump($users) . "</pre>";
+//        die('End');
     }
 
 }

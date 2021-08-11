@@ -2,13 +2,8 @@
 
 error_reporting(-1);
 
-use classes\User;
-use classes\UserDB;
 require 'db_connection.php';
 require_once 'json.php';
-require_once 'classes/User.php';
-require_once 'classes/UserDB.php';
-
 
 ?>
 
@@ -24,7 +19,7 @@ require_once 'classes/UserDB.php';
         <button class = "table-verification-button">Table 'users'</button>
     </div>
     <div>
-        <button class = "create-table hidden" onclick="<?php $dbh->createTable() ?>">Create table 'users'</button>
+        <button class = "create-table hidden">Create table 'users'</button>
         <p class = 'tableMessage hidden'>Table 'users' is created</p>
     </div>
     <div class="created_table hidden">
@@ -53,11 +48,18 @@ require_once 'classes/UserDB.php';
         <p>
             Phone
             <input type="checkbox" class="phone-checkbox" />
-            <input type="text" name="phone" class = "phone"/>
+            <input type="text" name="phone" class = "phone hidden"/>
         </p>
     </form>
     <button class = 'table-add-information hidden'>Add to table</button>
     <p class="result" style="color:blue"> </p>
+    <p class="result1" style="color:blue"> </p>
+
+    <div class = 'id 1'>1</div>
+
+    <?php
+
+    ?>
 
 <!--    <hr>-->
 
