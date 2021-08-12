@@ -19,9 +19,9 @@ class DataManage
 
     public static function getInstance()
     {
-        if(isset(self::$instance)){
+        if (isset(self::$instance)) {
             return self::$instance;
-        }else{
+        } else {
             return self::$instance = new self;
         }
     }
@@ -53,12 +53,19 @@ class DataManage
             case 'id':
 
                 $this->user->jsonRequest($this->userData);
-                $this->db->select($this->user);
-                $json_request = json_encode($this->db->select($this->user));
-                return $json_request;
+                $userInformation = $this->db->select($this->user);
+                $json_request = json_encode($userInformation);
+                echo $json_request;
                 //create json_encode and
+                break;
 
+            case 'all-id':
 
+                $userInformation = $this->db->selectAllId();
+                $userInformation['allId'] = '1';
+
+                $json_request = json_encode($userInformation);
+                echo $json_request;
 
                 break;
             case 'table':

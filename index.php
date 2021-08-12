@@ -52,16 +52,14 @@ require_once 'json.php';
         </p>
     </form>
     <button class = 'table-add-information hidden'>Add to table</button>
-    <p class="result" style="color:blue"> </p>
-    <p class="result1" style="color:blue"> </p>
 
-    <div class = 'id 1'>1</div>
+    <hr>
 
-    <?php
+    <button class="all-id">Вывести все id из БД</button>
 
-    ?>
+    <div class = "all-id-div"></div>
 
-<!--    <hr>-->
+
 
 <script type="text/javascript" src = script.js></script>
 </body>

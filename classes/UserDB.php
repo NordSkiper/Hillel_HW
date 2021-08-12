@@ -71,4 +71,14 @@ HEREDOC;
 //        die('End');
     }
 
+    public function selectAllId()
+    {
+        $query = $this->prepare('SELECT id FROM test') ;
+        $query->execute();
+        $usersId = $query->fetchAll();
+
+        return $usersId;
+
+    }
+
 }
