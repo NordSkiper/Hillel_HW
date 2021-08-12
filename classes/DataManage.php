@@ -33,10 +33,16 @@ class DataManage
         $this->db = $db;
     }
 
+
+
     public function manage()
     {
 
         switch (array_key_first($this->userData)) {
+            case 'id-delete':
+                $this->db->delete($this->userData);
+                echo 'deleted';
+                break;
             case 'name':
                 $this->user->jsonRequest($this->userData);
                 try {
@@ -53,10 +59,10 @@ class DataManage
             case 'id':
 
                 $this->user->jsonRequest($this->userData);
+//                die();
                 $userInformation = $this->db->select($this->user);
                 $json_request = json_encode($userInformation);
                 echo $json_request;
-                //create json_encode and
                 break;
 
             case 'all-id':

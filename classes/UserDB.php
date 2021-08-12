@@ -8,6 +8,8 @@ use PDO;
 class UserDB extends PDO
 {
 
+    protected $table = 'users';
+
     public function __construct($dsn, $username = null, $password = null, $options = null)
     {
         parent::__construct($dsn, $username, $password, $options);
@@ -16,7 +18,7 @@ class UserDB extends PDO
     public function create(User $user)
     {
         $query = <<<HEREDOC
-INSERT INTO `test` 
+INSERT INTO `{$this->table}` 
     (`name`, `surname`, `age`, `email`, `phone`) 
     VALUES 
     ('{$user->getName()}', '{$user->getSurname()}', '{$user->getAge()}', '{$user->getEmail()}', '{$user->getPhone()}')
@@ -28,7 +30,7 @@ HEREDOC;
 
     public function tableVerification()
     {
-        $query = "SELECT 1 FROM `test` LIMIT 1";
+        $query = "SELECT 1 FROM `{$this->table}` LIMIT 1";
         $query_check = $this->prepare($query);
         $query_check->execute();
 
@@ -45,7 +47,7 @@ HEREDOC;
     public function createTable()
     {
         $query = <<<HEREDOC
-CREATE TABLE IF NOT EXISTS `test` ( 
+CREATE TABLE IF NOT EXISTS `{$this->table}` ( 
     `id` INT UNSIGNED NOT NULL AUTO_INCREMENT , 
     `name` VARCHAR(15) NOT NULL , 
     `surname` VARCHAR(15) NOT NULL , 
@@ -61,24 +63,37 @@ HEREDOC;
     public function select(User $user): array
     {
 
-        $query = $this->prepare('SELECT * FROM test WHERE `id` = ' . $user->getId());
+        $query = $this->prepare("SELECT * FROM {$this->table} WHERE `id` = " . $user->getId());
         $query->execute();
         $users = $query->fetchAll();
 
         return $users;
-
-//        echo "<pre>" . var_dump($users) . "</pre>";
-//        die('End');
     }
 
     public function selectAllId()
     {
-        $query = $this->prepare('SELECT id FROM test') ;
+        $query = $this->prepare("SELECT id FROM {$this->table}");
         $query->execute();
         $usersId = $query->fetchAll();
 
         return $usersId;
 
+    }
+
+    public function delete(array $id)
+    {
+
+        $userID = $id['id-delete'];
+        foreach ($userID as $key){
+
+            $query = "DELETE FROM `{$this->table}` WHERE `id` = " . $key;
+            $query_delete = $this->prepare($query);
+            $query_delete->execute();
+        }
+//        $condition = preg_replace('/(AND\W)$/', '', $condition);
+//        $query = 'DELETE FROM `test` ' . $condition;
+//        $query_delete = $this->prepare($query);
+//        $query_delete->execute();
     }
 
 }

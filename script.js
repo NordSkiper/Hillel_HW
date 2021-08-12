@@ -1,10 +1,21 @@
 let tableCreationButton = document.getElementsByClassName('create-table')[0];
 let tableVerificationButton = document.querySelector('.table-verification-button');
+
 let tableAddInformation = document.querySelector('.table-add-information');
 let InputDataButton = document.querySelector(".show-form-insert")
 let phoneCheckBox = document.querySelector('.phone-checkbox');
+
 let inputId = document.querySelector('.all-id-div');
-let allId = document.querySelector('.all-id');
+// let allId = document.querySelector('.all-id');
+
+let showUserButton = document.querySelector('.showUserButton');
+let selectUserId = document.querySelector('.selectUserId');
+
+let selectUserIdDel = document.querySelector('.selectDeleteUser');
+let deleteUserButton = document.querySelector('.deleteUserButton');
+
+//all id output to select
+userInSelect();
 
 phoneCheckBox.addEventListener('change', function () {
     showForm('.phone');
@@ -15,38 +26,16 @@ InputDataButton.addEventListener('click', function () {
     showForm('.table-add-information');
 });
 
-function showForm(e) {
-    let element = document.querySelector(e);
-    if (element.classList.contains('hidden')) {
-        element.classList.remove('hidden');
-    } else {
-        element.classList.add('hidden');
-    }
-}
-
-
-allId.addEventListener('click', function (){
+showUserButton.addEventListener('click', function () {
 
     let data = JSON.stringify({
-        "all-id": 1,
+        "id": selectUserId.value,
     });
-
     sendJSON(data);
-});
 
-//Переробити, все неправильно
-// inputId.addEventListener('click', function () {
-//
-//     let data = JSON.stringify({
-//         "id": 1,
-//     });
-//     sendJSON(data);
-//
-// })
+})
 
 tableVerificationButton.addEventListener('click', function () {
-    let message = document.querySelector('.tableMessage');
-
     let data = JSON.stringify({
         "table": 1,
     });
@@ -81,6 +70,26 @@ tableAddInformation.addEventListener('click', function () {
 
 });
 
+deleteUserButton.addEventListener('click', function () {
+
+    let selectedValues = Array.from(selectUserIdDel.selectedOptions)
+        .map(option => option.value);
+
+    let data = JSON.stringify({
+        "id-delete": selectedValues,
+    });
+    sendJSON(data);
+});
+
+function showForm(e) {
+    let element = document.querySelector(e);
+    if (element.classList.contains('hidden')) {
+        element.classList.remove('hidden');
+    } else {
+        element.classList.add('hidden');
+    }
+}
+
 function sendJSON(data) {
 
     let xhr = new XMLHttpRequest();
@@ -102,87 +111,70 @@ function sendJSON(data) {
                     break
                 case 'Data has been insert':
                     let result = document.querySelector(".result")
-                    let message = 'Данные внесены в таблицу'
-                    result.innerHTML = message;
+                    result.innerHTML = this.responseText;
+                    userInSelect();
                     break
                 case 'Table created':
                     document.querySelector('.tableMessage').classList.remove('hidden');
                     break
+                case 'deleted':
+                    document.querySelector(".result-deleted").innerHTML = "User has been deleted";
+                    userInSelect();
+                    break
                 default:
 
+                    // console.log(xhr.responseText);
                     const userInformation = JSON.parse(xhr.responseText);
 
-                    if (userInformation['allId']){
+                    if (userInformation['allId']) {
                         showAllId(userInformation);
-                    }else{
-                        console.log(userInformation[0]);
-                        let id_container = document.querySelector(".id" + userInformation[0].id);
-                        console.log(id_container);
+                    } else {
 
-
-                        if (id_container.classList.contains('fill')) {
-                            let div = document.querySelector('.id-' + userInformation[0].id)
-                            console.log(div);
-                            id_container.classList.remove('fill');
-                            div.remove();
+                        if (document.querySelector(".user-information-show")) {
+                            document.querySelector(".user-information-show").remove();
+                            showData(userInformation);
                         } else {
                             showData(userInformation);
                         }
+
                     }
-
-                    break
+                    break;
             }
-
         }
-    };
+    }
 }
 
-function showAllId(data)
-{
-    inputId.textContent = '';
+function createOption(id_paremter) {
+    let id = id_paremter;
+    let option = document.createElement('option');
+    option.classList.add('id' + id);
+    option.value = id;
+    option.textContent = 'Id ' + id;
+    return option;
+}
+
+function showAllId(data) {
+    selectUserIdDel.textContent = '';
+    selectUserId.textContent = '';
 
     Object.keys(data).forEach(key => {
-
-        if(key !== 'allId'){
+        if (key !== 'allId') {
             Object.keys(data[key]).forEach(keys => {
 
-
-
-                //create div content for each id
                 let id = data[key][keys];
-                let div = document.createElement('div');
-                div.classList.add('id');
-                div.classList.add('id' + id);
-                div.textContent = 'Id ' + id;
 
-                //create button
-                let deleteButton = document.createElement('button')
-                deleteButton.classList.add('id' + id);
-                deleteButton.textContent = 'Удалить Id' + id;
+                selectUserId.appendChild(createOption(id));
+                selectUserIdDel.appendChild(createOption(id));
 
-                inputId.appendChild(deleteButton);
-                inputId.appendChild(div);
-
-
-
-                //create appearance all information about id
-                div.addEventListener('click', function () {
-                    let data = JSON.stringify({
-                        "id": id,
-                    });
-                    sendJSON(data);
-                });
             });
         }
-
     });
 }
 
 function showData(data) {
-    let id = data[0].id;
-    let id_container = document.querySelector(".id" + id);
+
     let div = document.createElement('div');
-    div.classList.add('id-' + id);
+    div.classList.add('user-information-show');
     let name = document.createElement('p');
     let surname = document.createElement('p');
     let age = document.createElement('p');
@@ -197,7 +189,6 @@ function showData(data) {
         phone.textContent = 'Phone: ' + data[0].phone;
     }
 
-    id_container.insertAdjacentElement('afterend', div);
     div.appendChild(name);
     div.appendChild(surname);
     div.appendChild(age);
@@ -205,5 +196,13 @@ function showData(data) {
     if (data[0].phone) {
         div.appendChild(phone);
     }
-    id_container.classList.add('fill');
+    inputId.insertAdjacentElement('beforeend', div);
+}
+
+function userInSelect() {
+    selectUserId.textContent = "";
+    let usersId = JSON.stringify({
+        "all-id": 1,
+    });
+    sendJSON(usersId);
 }

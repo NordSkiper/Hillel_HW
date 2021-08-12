@@ -1,9 +1,10 @@
 <?php
+
 namespace classes;
 
 class User
 {
-//    protected $dbh;
+
     protected $id;
     protected $name;
     protected $surname;
@@ -13,7 +14,7 @@ class User
 
     public function jsonRequest(array $json_request)
     {
-        switch ($json_request['id']){
+        switch ($json_request['id']) {
             case null:
                 $this->name = $json_request["name"];
                 $this->surname = $json_request["surname"];
@@ -26,8 +27,6 @@ class User
                 break;
         }
     }
-
-
 
     public function getData()
     {

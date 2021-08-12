@@ -1,19 +1,22 @@
 <?php
 
+use classes\DataManage;
+use classes\User;
+
 require_once 'classes/DataManage.php';
 require_once 'classes/User.php';
 require 'db_connection.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
 
-function clientCode(\classes\DataManage $dataManage)
+function clientCode(DataManage $dataManage)
 {
     $dataManage->manage();
 }
 
-$user = new \classes\User();
-if(isset($data)){
-    $dataManage = \classes\DataManage::getInstance();
+$user = new User();
+if (isset($data)) {
+    $dataManage = DataManage::getInstance();
     $dataManage->setData($user, $data, $dbh);
     clientCode($dataManage);
 //    echo '<pre>'. $user->getId() .'</pre>';
