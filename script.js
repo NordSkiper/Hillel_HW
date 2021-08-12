@@ -14,6 +14,8 @@ let selectUserId = document.querySelector('.selectUserId');
 let selectUserIdDel = document.querySelector('.selectDeleteUser');
 let deleteUserButton = document.querySelector('.deleteUserButton');
 
+let insertForm = document.querySelector('.form-insert');
+
 //all id output to select
 userInSelect();
 
@@ -50,6 +52,16 @@ tableCreationButton.addEventListener("click", function () {
 });
 
 tableAddInformation.addEventListener('click', function () {
+
+    let fields = insertForm.querySelectorAll('.field')
+
+    for (let i = 0; i < fields.length; i++) {
+        if (!fields[i].value) {
+            document.querySelector('.result').innerHTML = "Please fill in all information";
+            // console.log('field is blank', fields[i]);
+            return;
+        }
+    }
 
     let form = document.querySelector('.form-insert');
     let name = form.querySelector('.name');

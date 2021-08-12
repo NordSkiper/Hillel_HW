@@ -48,7 +48,7 @@ class DataManage
                 try {
                     $this->db->create($this->user);
                 } catch (PDOException $e) {
-                    $e->getMessage();
+                    die($e->getMessage());
                 }
                 echo 'Data has been insert';
                 break;
@@ -59,7 +59,6 @@ class DataManage
             case 'id':
 
                 $this->user->jsonRequest($this->userData);
-//                die();
                 $userInformation = $this->db->select($this->user);
                 $json_request = json_encode($userInformation);
                 echo $json_request;

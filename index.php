@@ -31,19 +31,19 @@ require_once 'json.php';
 <form class="form-insert hidden" action="index.php" method="post">
     <p>
         Name
-        <input type="text" name="name" class="name" required/>
+        <input type="text" name="name" class="name field" required/>
     </p>
     <p>
         Surname
-        <input type="text" name="surname" class="surname" required/>
+        <input type="text" name="surname" class="surname field" required/>
     </p>
     <p>
         Age
-        <input type="text" name="age" class="age" required/>
+        <input type="text" name="age" class="age field" required/>
     </p>
     <p>
         Email
-        <input type="email" name="email" class="email" required/>
+        <input type="email" name="email" class="email field" required/>
     </p>
     <p>
         Phone
