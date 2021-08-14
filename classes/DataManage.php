@@ -1,8 +1,5 @@
 <?php
-
-
 namespace classes;
-
 
 class DataManage
 {
