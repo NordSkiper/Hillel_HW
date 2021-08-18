@@ -1,12 +1,24 @@
 <?php
 
+error_reporting(-1);
+
 require_once 'autoload.php';
 
-use Payment\PaymentSystem;
+$contact = new classes\Contact();
 
-function clientCode(PaymentSystem $paymentSystem )
-{
-    $paymentSystem->pay();
-}
+$newContact = $contact->phone('000-555-000')
+    ->name("John")
+    ->surname("Surname")
+    ->email("john@email.com")
+    ->address("Some address")
+    ->build();
 
-clientCode(new \Payment\MasterCard('41424124', '111', 'Abdyla'));
+var_dump($newContact);
+echo '<hr>';
+
+$oldContact =$contact->phone('000')
+    ->name("John")
+    ->surname("Sur")
+    ->build();
+
+var_dump($oldContact);
